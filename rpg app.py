@@ -45,7 +45,7 @@ if "player" not in st.session_state:
 
 # マップ表示
 position = st.session_state.player["位置"]
-max_position = 10
+max_position = 5
 map_display = (
     "□" * st.session_state.position
     + "(˙𐃷˙)"
@@ -56,8 +56,8 @@ st.write(map_display)
 if "map" not in st.session_state:
     st.session_state.map = random.choices(
         ["戦闘", "ショップ", "宝箱", "回復", "何もない"],
-        weights=[40, 10, 15, 10, 25],
-        k=50
+        weights=[1, 1, 1, 1, 1],
+        k=5
     )
 
 if "position" not in st.session_state:
