@@ -39,6 +39,7 @@ if "player" not in st.session_state:
         "攻撃力": 20,
         "経験値": 0,
         "所持金": 100,
+        "位置": 0
         
     }
 
