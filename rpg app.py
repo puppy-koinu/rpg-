@@ -1,10 +1,31 @@
-
-
 import streamlit as st
+
 import pandas as pd
 import random
 
+if "position" not in st.session_state:
+    st.session_state.position = 0
+
 st.set_page_config(page_title="RPG", page_icon="⚔️")
+
+if "mode" not in st.session_state:
+    st.session_state.mode = "title"
+if st.session_state.mode == "title":
+
+    st.markdown(
+        """
+        <h1 style="text-align:center;">
+        ⚔️ 勇者(˙𐃷˙)の大冒険 ⚔️
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.write("")
+
+    if st.button("冒険を始める"):
+        st.session_state.mode = "map"
+        st.rerun()
 
 # -----------------------------
 # 初期化
@@ -17,9 +38,20 @@ if "player" not in st.session_state:
         "最大HP": 50,
         "攻撃力": 20,
         "経験値": 0,
-        "所持金": 100
+        "所持金": 100,
+        "位置": 0
     }
 
+# マップ表示
+position = st.session_state.player["位置"]
+max_position = 10
+map_display = (
+    "□" * st.session_state.position
+    + "(˙𐃷˙)"
+    + "□" * (max_position - st.session_state.position - 1)
+)
+
+st.write(map_display)
 if "map" not in st.session_state:
     st.session_state.map = random.choices(
         ["戦闘", "ショップ", "宝箱", "回復", "何もない"],
@@ -51,7 +83,7 @@ data = {
         "(˙𐃷˙(˙𐃷˙)˙𐃷˙)"
     ],
     "HP": [20, 30, 10, 5, 40, 150],
-    "攻撃": [3, 7, 5, 15, 20, 50],
+    "攻撃": [3, 7, 5, 15, 20, 5],
     "経験値": [15, 25, 10, 15, 45, 80]
 }
 
@@ -60,7 +92,7 @@ df = pd.DataFrame(data)
 # -----------------------------
 # サイドバー
 # -----------------------------
-st.sidebar.title("プレイヤー")
+st.sidebar.title("(˙𐃷˙)")
 
 st.sidebar.write("Lv", player["レベル"])
 st.sidebar.write("HP", f'{player["HP"]}/{player["最大HP"]}')
@@ -170,17 +202,17 @@ def battle():
                 d = random.randint(1, enemy["攻撃"])
 
                 total += d
-                player["HP"] -= d
+                st.session_state.player["HP"] -= d
 
             st.error(
-                f"🐺 ケルベロスの2連攻撃！ {total}ダメージ！"
+                f"(˙𐃷˙(˙𐃷˙)˙𐃷˙)の2連攻撃！ {total}ダメージ！"
             )
 
         else:
 
             d = random.randint(1, enemy["攻撃"])
 
-            player["HP"] -= d
+            st.session_state.player["HP"] -= damage
 
             st.error(f"{d}ダメージ！")
 
@@ -309,14 +341,14 @@ def map_event():
 
     st.title("🗺️ マップ")
 
-    st.write(f"### {st.session_state.position+1} / 50 マス")
+    st.write(f"### {st.session_state.position+1} / 5 マス")
 
     # ゴール
-    if st.session_state.position >= 50:
+    if st.session_state.position >= 4:
 
         st.success("ゴールに到着！")
 
-        if st.button("👹 ラスボスへ"):
+        if st.button("ラスボスへ"):
 
             start_battle(True)
 
@@ -371,7 +403,7 @@ elif st.session_state.mode == "battle":
 
 elif st.session_state.mode == "gameover":
 
-    st.title("💀 ゲームオーバー")
+    st.title("(´-ω-`) ゲームオーバー")
 
     st.error("あなたは倒れてしまった...")
 
@@ -388,7 +420,7 @@ elif st.session_state.mode == "clear":
 
     st.balloons()
 
-    st.success("ケルベロスを倒した！")
+    st.success("(˙𐃷˙(˙𐃷˙)˙𐃷˙)を倒した！")
 
     st.write("### 最終ステータス")
 
